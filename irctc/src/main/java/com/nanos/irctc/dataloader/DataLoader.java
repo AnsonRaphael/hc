@@ -1,8 +1,14 @@
 package com.nanos.irctc.dataloader;
 
 
+import com.nanos.irctc.entity.train.CoachType;
 import com.nanos.irctc.entity.user.Role;
+import com.nanos.irctc.model.train.CoachDTO;
+import com.nanos.irctc.model.train.SeatDTO;
+import com.nanos.irctc.model.train.TrainDTO;
 import com.nanos.irctc.model.user.UserDTO;
+import com.nanos.irctc.service.train.TrainService;
+import com.nanos.irctc.service.train.TrainServiceImpl;
 import com.nanos.irctc.service.user.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
@@ -15,10 +21,11 @@ import java.util.List;
 @AllArgsConstructor
 public class DataLoader implements CommandLineRunner {
     private final UserService userService;
+    private final TrainService trainService;
     @Override
     public void run(String... args) throws Exception {
         saveListOfUser();
-
+        saveTrain();
     }
     public void saveListOfUser(){
         //List<UserDTO> userDTOS = new ArrayList<>();
@@ -38,4 +45,63 @@ public class DataLoader implements CommandLineRunner {
         userService.saveUser(userDTO);
         userService.saveUser(userDTO1);
     }
+    public void saveTrain(){
+        //List<UserDTO> userDTOS = new ArrayList<>();
+        //userDTOS.add(userDTO);
+//        UserDTO userDTO1 = UserDTO.builder()
+//                .role(Role.ADMIN)
+//                .userName("admin2")
+//                .password("password")
+//                .email("admin2@email.com")
+//                .build();
+//        userService.saveUser(userDTO1);
+
+        TrainDTO trainDTO = TrainDTO.builder()
+                .trainName("SH1 - cl")
+                .build();
+        trainDTO=trainService.saveTrain(trainDTO);
+        CoachDTO coachDTO = CoachDTO.builder()
+                .coachType(CoachType.SEATER)
+                .build();
+        coachDTO=trainService.addCoaches(trainDTO.getTrainId(),coachDTO);
+        CoachDTO coachDTO1 = CoachDTO.builder()
+                .coachType(CoachType.SEATER)
+                .build();
+        coachDTO1=trainService.addCoaches(trainDTO.getTrainId(),coachDTO1);
+        trainService.removeCoaches(coachDTO1.getCoachId());
+        coachDTO.setCoachType(CoachType.NON_AC);
+        trainService.updateCoaches(coachDTO.getCoachId(),coachDTO);
+
+
+        List<SeatDTO> col = trainService.getCoachSeat(coachDTO.getCoachId());
+        System.out.println(col);
+    }
+    public void deleteTrain(){
+        //List<UserDTO> userDTOS = new ArrayList<>();
+        //userDTOS.add(userDTO);
+//        UserDTO userDTO1 = UserDTO.builder()
+//                .role(Role.ADMIN)
+//                .userName("admin2")
+//                .password("password")
+//                .email("admin2@email.com")
+//                .build();
+//        userService.saveUser(userDTO1);
+
+        TrainDTO trainDTO = TrainDTO.builder()
+                .trainName("SH2 - cl")
+                .build();
+        trainDTO=trainService.saveTrain(trainDTO);
+        CoachDTO coachDTO = CoachDTO.builder()
+                .coachType(CoachType.AC)
+                .build();
+        trainService.addCoaches(trainDTO.getTrainId(),coachDTO);
+        CoachDTO coachDTO1 = CoachDTO.builder()
+                .coachType(CoachType.SEATER)
+                .build();
+        trainService.addCoaches(trainDTO.getTrainId(),coachDTO1);
+
+        trainService.removeCoaches(coachDTO1.getCoachId());
+    }
+
+
 }

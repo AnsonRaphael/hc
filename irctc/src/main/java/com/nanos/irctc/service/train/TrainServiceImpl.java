@@ -2,6 +2,7 @@ package com.nanos.irctc.service.train;
 
 import com.nanos.irctc.config.SeatNoConstants;
 import com.nanos.irctc.entity.train.Coach;
+import com.nanos.irctc.entity.train.CoachType;
 import com.nanos.irctc.entity.train.Seat;
 import com.nanos.irctc.entity.train.Train;
 import com.nanos.irctc.entity.user.User;
@@ -36,20 +37,20 @@ public class TrainServiceImpl implements TrainService {
     SeatMapper seatMapper;
     TrainMapper trainMapper;
     CoachMapper coachMapper;
-    public void saveTrain(TrainDTO trainDTO) {
-        Train train = Train.builder()
-                        .trainName(trainDTO.getTrainName())
-                                        .build();
-        trainRepository.save(train);
+    public TrainDTO saveTrain(TrainDTO trainDTO) {
+        Train train = trainMapper.trainDTOToTrain(trainDTO);
+        train=trainRepository.save(train);
+        return trainMapper.trainToTrainDTO(train);
     }
 
-    public void updateTrain(Long id, TrainDTO trainDTO) {
+    public TrainDTO updateTrain(Long id, TrainDTO trainDTO) {
         Optional<Train> trainOptional = trainRepository.findById(id);
         if (!trainOptional.isPresent())
             throw new NotFoundException("train id "+id+" not found in DB");
         Train train = trainOptional.get();
         train.setTrainName(trainDTO.getTrainName());
-        trainRepository.save(train);
+        train=trainRepository.save(train);
+        return trainMapper.trainToTrainDTO(train);
     }
 
     public void deleteTrain(Long id) {
@@ -60,7 +61,7 @@ public class TrainServiceImpl implements TrainService {
         trainRepository.delete(train);
     }
     @Transactional
-    public void addCoaches(Long trainId, CoachDTO coachDTO){
+    public CoachDTO addCoaches(Long trainId, CoachDTO coachDTO){
         Optional<Train> trainOptional = trainRepository.findById(trainId);
         if (!trainOptional.isPresent())
             throw new NotFoundException("train id "+trainId+" not found in DB");
@@ -71,11 +72,11 @@ public class TrainServiceImpl implements TrainService {
                 .build();
         coach=coachRepository.saveAndFlush(coach);
         int noOfSeats= 0;
-        if(coachDTO.getCoachType().equals("AC"))
+        if(coachDTO.getCoachType()== CoachType.AC)
             noOfSeats=SeatNoConstants.AC;
-        if(coachDTO.getCoachType().equals("NON_AC"))
+        if(coachDTO.getCoachType()== CoachType.NON_AC)
             noOfSeats=SeatNoConstants.NON_AC;
-        if(coachDTO.getCoachType().equals("SEATER"))
+        if(coachDTO.getCoachType()== CoachType.SEATER)
             noOfSeats=SeatNoConstants.SEATER;
         List<Seat> seats=new ArrayList<>();
         for (int i = 0; i < noOfSeats; i++) {
@@ -84,6 +85,7 @@ public class TrainServiceImpl implements TrainService {
             seats.add(seat);
         }
         seatRepository.saveAllAndFlush(seats);
+        return coachMapper.coachToCoachDTO(coach);
     }
 
     @Transactional
@@ -104,11 +106,11 @@ public class TrainServiceImpl implements TrainService {
             return;
         int currentSeatNo=coach.getSeats().size();
         int noOfSeats= 0;
-        if(coachDTO.getCoachType().equals("AC"))
+        if(coachDTO.getCoachType()== CoachType.AC)
             noOfSeats=SeatNoConstants.AC;
-        if(coachDTO.getCoachType().equals("NON_AC"))
+        if(coachDTO.getCoachType()== CoachType.NON_AC)
             noOfSeats=SeatNoConstants.NON_AC;
-        if(coachDTO.getCoachType().equals("SEATER"))
+        if(coachDTO.getCoachType()== CoachType.SEATER)
             noOfSeats=SeatNoConstants.SEATER;
         if(currentSeatNo>noOfSeats){
             int diff=currentSeatNo-noOfSeats;

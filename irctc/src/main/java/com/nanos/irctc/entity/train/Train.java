@@ -18,6 +18,6 @@ public class Train {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long trainId;
     private String trainName;
-    @OneToMany(mappedBy = "train")
+    @OneToMany(mappedBy = "train",fetch = FetchType.EAGER,cascade = { CascadeType.REMOVE })
     private List<Coach> coaches;
 }

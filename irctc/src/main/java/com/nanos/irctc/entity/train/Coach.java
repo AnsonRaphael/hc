@@ -21,6 +21,6 @@ public class Coach {
     @ManyToOne
     @JoinColumn(name = "trainId",nullable = false)
     private Train train;
-    @OneToMany(mappedBy = "coach")
+    @OneToMany(mappedBy = "coach",fetch = FetchType.EAGER,cascade = { CascadeType.REMOVE })
     private List<Seat> seats;
 }

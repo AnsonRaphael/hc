@@ -1,14 +1,12 @@
 package com.nanos.irctc.entity.user;
 
+import com.nanos.irctc.entity.booking.Booking;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
 @Data
@@ -24,4 +22,7 @@ public class User {
     private String email;
     private String password;
     private Role role;
+
+    @OneToOne(mappedBy = "user")
+    private Booking booking;
 }
