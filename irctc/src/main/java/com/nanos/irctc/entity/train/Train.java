@@ -1,9 +1,6 @@
 package com.nanos.irctc.entity.train;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -11,13 +8,14 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Data
+@Getter
+@Setter
 @Entity
 public class Train {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long trainId;
     private String trainName;
-    @OneToMany(mappedBy = "train",fetch = FetchType.EAGER,cascade = { CascadeType.REMOVE })
+    @OneToMany(mappedBy = "train",cascade = { CascadeType.ALL })
     private List<Coach> coaches;
 }

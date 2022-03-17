@@ -2,6 +2,7 @@ package com.nanos.irctc.service.user;
 
 import com.nanos.irctc.entity.user.User;
 import com.nanos.irctc.exception.NotFoundException;
+import com.nanos.irctc.mapper.UserMapper;
 import com.nanos.irctc.model.user.UserDTO;
 import com.nanos.irctc.repository.user.UserRepository;
 import lombok.AllArgsConstructor;
@@ -15,14 +16,14 @@ import java.util.Optional;
 @Data
 public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
-
-    public void saveUser(UserDTO userDTO) {
+    UserMapper userMapper;
+    public UserDTO saveUser(UserDTO userDTO) {
         User user = User.builder().userName(userDTO.getUserName())
                 .email(userDTO.getEmail())
                 .password(userDTO.getPassword())
                 .role(userDTO.getRole())
                 .build();
-        userRepository.save(user);
+       return userMapper.userToUserDTO( userRepository.save(user));
     }
 
     public void updateUser(Long id, UserDTO userDTO) {

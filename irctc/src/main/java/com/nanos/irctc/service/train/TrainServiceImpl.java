@@ -24,6 +24,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -112,27 +113,22 @@ public class TrainServiceImpl implements TrainService {
             noOfSeats=SeatNoConstants.NON_AC;
         if(coachDTO.getCoachType()== CoachType.SEATER)
             noOfSeats=SeatNoConstants.SEATER;
-        if(currentSeatNo>noOfSeats){
-            int diff=currentSeatNo-noOfSeats;
-            List<Seat> seats =coach.getSeats();
-            for (int i = 0; i < diff; i++) {
-                seatRepository.delete(seats.get(i));
-            }
-        }else{
-            int diff=noOfSeats-currentSeatNo;
-            List<Seat> seats=new ArrayList<>();
-            for (int i = 0; i < diff; i++) {
-                Seat seat=Seat.builder()
-                        .coach(coach).build();
-                seats.add(seat);
-            }
-            seatRepository.saveAllAndFlush(seats);
-        }
 
-        coachRepository.save(coach);
+        List<Seat> sr = coach.getSeats();
+        coach.setSeats(null);
+        coachRepository.saveAndFlush(coach);
+        seatRepository.deleteAll(sr);
+        List<Seat> seats=new ArrayList<>();
+        for (int i = 0; i < noOfSeats; i++) {
+            Seat seat=Seat.builder()
+                    .coach(coach).build();
+            seats.add(seat);
+        }
+        seatRepository.saveAllAndFlush(seats);
+        //return coachRepository.findById(coachId).get();
     }
 
-
+@Transactional
     public List<SeatDTO> getCoachSeat(Long coachId) {
         Optional<Coach> coachOptional = coachRepository.findById(coachId);
         if (!coachOptional.isPresent())

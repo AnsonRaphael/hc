@@ -1,16 +1,14 @@
 package com.nanos.irctc.entity.train;
 
 import com.nanos.irctc.entity.booking.Booking;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 @Entity
 @Builder
 public class Seat {

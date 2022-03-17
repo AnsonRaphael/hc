@@ -42,6 +42,7 @@ public class DataLoader implements CommandLineRunner {
                 .password("password")
                 .email("user1@email.com")
                 .build();
+        userDTO=userService.saveUser(userDTO);
         TrainDTO trainDTO = TrainDTO.builder()
                 .trainName("SH1 - cl")
                 .build();

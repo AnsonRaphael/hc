@@ -3,6 +3,7 @@ package com.nanos.irctc.service.booking;
 import com.nanos.irctc.entity.booking.Booking;
 import com.nanos.irctc.entity.train.Coach;
 import com.nanos.irctc.entity.train.Seat;
+import com.nanos.irctc.entity.user.User;
 import com.nanos.irctc.exception.NotFoundException;
 import com.nanos.irctc.exception.SeatUnAvailableException;
 import com.nanos.irctc.mapper.*;
@@ -13,6 +14,7 @@ import com.nanos.irctc.repository.booking.BookingRepository;
 import com.nanos.irctc.repository.train.CoachRepository;
 import com.nanos.irctc.repository.train.SeatRepository;
 import com.nanos.irctc.repository.train.TrainRepository;
+import com.nanos.irctc.repository.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
@@ -33,6 +35,7 @@ public class BookingServiceImpl implements BookingService {
     private final TrainRepository trainRepository;
     private final CoachRepository coachRepository;
     private final SeatRepository seatRepository;
+    private final UserRepository userRepository;
     TrainMapper trainMapper;
     CoachMapper coachMapper;
     @Transactional
@@ -40,6 +43,10 @@ public class BookingServiceImpl implements BookingService {
         if(!isSeatAvailable(bookingDTO.getSeatDTO()))
             throw new SeatUnAvailableException("Seat already booked");
         Booking booking = bookingMapper.bookingDTOToBooking(bookingDTO);
+        Seat seat = seatRepository.getById(bookingDTO.getSeatDTO().getSeatId());
+        User user =userRepository.getById(bookingDTO.getUserDTO().getUserId());
+        booking.setUser(user);
+        booking.setSeat(seat);
         booking= bookingRepository.save(booking);
        return bookingMapper.bookingToBookingDTO(booking);
     }

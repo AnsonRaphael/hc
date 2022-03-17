@@ -1,14 +1,12 @@
 package com.nanos.irctc.entity.train;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -21,6 +19,6 @@ public class Coach {
     @ManyToOne
     @JoinColumn(name = "trainId",nullable = false)
     private Train train;
-    @OneToMany(mappedBy = "coach",fetch = FetchType.EAGER,cascade = { CascadeType.REMOVE })
+    @OneToMany(mappedBy = "coach",cascade = { CascadeType.ALL })
     private List<Seat> seats;
 }
