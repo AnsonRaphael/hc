@@ -9,7 +9,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -59,5 +61,15 @@ public class UserServiceImpl implements UserService {
                 .role(user.getRole()).build();
 
         return userDTO;
+    }
+
+    @Override
+    public List<UserDTO> getAllUser() {
+        List<User> users = userRepository.findAll();
+        List<UserDTO> usersDto = users.stream().map(user -> {
+           return userMapper.userToUserDTO(user);
+        }).collect(Collectors.toList());
+
+        return usersDto;
     }
 }

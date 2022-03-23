@@ -29,9 +29,9 @@ public class DataLoader implements CommandLineRunner {
     private final BookingService bookingService;
     @Override
     public void run(String... args) throws Exception {
-        saveListOfUser();
-        saveTrain();
-        saveListOfBooking();
+       // saveListOfUser();
+       // saveTrain();
+        //saveListOfBooking();
     }
 
     public void saveListOfBooking(){
