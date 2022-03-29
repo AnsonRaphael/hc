@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 
 
 @Data
@@ -19,6 +20,8 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long userId;
     private String userName;
+    @Email
+    @Column(nullable = false, unique = true)
     private String email;
     private String password;
     private Role role;

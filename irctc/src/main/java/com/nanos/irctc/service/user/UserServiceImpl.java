@@ -1,6 +1,7 @@
 package com.nanos.irctc.service.user;
 
 import com.nanos.irctc.entity.user.User;
+import com.nanos.irctc.exception.BadRequestException;
 import com.nanos.irctc.exception.NotFoundException;
 import com.nanos.irctc.mapper.UserMapper;
 import com.nanos.irctc.model.user.UserDTO;
@@ -8,6 +9,7 @@ import com.nanos.irctc.repository.user.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.HttpClientErrorException;
 
 import java.util.List;
 import java.util.Optional;
@@ -20,6 +22,10 @@ public class UserServiceImpl implements UserService {
     private final UserRepository userRepository;
     UserMapper userMapper;
     public UserDTO saveUser(UserDTO userDTO) {
+        Boolean isUserExist = userRepository.selectExistsEmail(userDTO.getEmail());
+        if(isUserExist){
+            throw new BadRequestException("Email " + userDTO.getEmail() + " taken");
+        }
         User user = User.builder().userName(userDTO.getUserName())
                 .email(userDTO.getEmail())
                 .password(userDTO.getPassword())

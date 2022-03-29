@@ -8,6 +8,8 @@ import com.nanos.irctc.repository.train.TrainRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 import org.mockito.Mockito;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.atLeast;
 import static org.mockito.Mockito.times;
@@ -15,7 +17,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.junit.jupiter.api.Assertions.*;
 
-
+@DataJpaTest
 class BookingServiceImplTest {
 
 
@@ -26,13 +28,12 @@ class BookingServiceImplTest {
     TrainRepository trainRepository;
     CoachRepository coachRepository;
     SeatRepository seatRepository;
-    TrainMapper trainMapper;
-    CoachMapper coachMapper;
+     CoachMapper coachMapper;
     @Test
     void addBooking() {
-        Mockito.when(trainRepository.getById(any(Long.class))).thenReturn(null);
+       // Mockito.when(trainRepository.getById(any(Long.class))).thenReturn(null);
         //assertTrue();
-        verify(trainRepository,atLeast(1)).findById(any(Long.class));
+       // verify(trainRepository,atLeast(1)).findById(any(Long.class));
     }
 
     @Test
